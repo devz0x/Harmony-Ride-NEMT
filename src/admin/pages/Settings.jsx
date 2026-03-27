@@ -127,6 +127,16 @@ export default function Settings() {
               </div>
 
               <div className={styles.subSection}>
+                <h3 className={styles.subTitle}>Online Payments</h3>
+                <div className={styles.grid}>
+                  <Field label="Online Payment Link" value={form.payment_link || ''} onChange={v=>set('payment_link',v)}/>
+                </div>
+                <p style={{fontSize:'12px',color:'#94a3b8',margin:'4px 0 0'}}>
+                  Enter a Stripe Payment Link (https://buy.stripe.com/…) or PayPal.Me URL. Leave blank to disable online payments.
+                </p>
+              </div>
+
+              <div className={styles.subSection}>
                 <h3 className={styles.subTitle}>Business Hours</h3>
                 <div className={styles.hours}>
                   {DAYS.map(day => {

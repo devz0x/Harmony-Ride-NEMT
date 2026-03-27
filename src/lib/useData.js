@@ -35,6 +35,7 @@ const mapInvoice = (r) => ({
   invoiceDate:   r.invoice_date,
   dueDate:       r.due_date,
   billTo:        r.bill_to,
+  billToAddress: r.bill_to_address,
   paidDate:      r.paid_date,
   denialReason:  r.denial_reason,
   paymentTerms:  r.payment_terms,
@@ -111,7 +112,7 @@ const DEFAULT_SETTINGS = {
   operating_states: '',
   primary_phone: '', dispatch_phone: '',
   support_email: '', billing_email: '',
-  address: '', npi: '', medicaid_id: '', medicare_id: '',
+  address: '', npi: '', medicaid_id: '', medicare_id: '', payment_link: '',
   business_hours: {
     Monday:    { open: true,  start: '06:00', end: '22:00' },
     Tuesday:   { open: true,  start: '06:00', end: '22:00' },
@@ -184,6 +185,37 @@ export const db = {
   settings: {
     upsert: (data) => supabase.from('settings').upsert({ ...data, id: 1 }),
   },
+}
+
+export function useMyPatient() {
+  const [patient, setPatient] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const load = useCallback(async () => {
+    setLoading(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setLoading(false); return }
+    const { data } = await supabase.from('patients').select('*')
+      .eq('portal_user_id', user.id).maybeSingle()
+    setPatient(data ? mapPatient(data) : null)
+    setLoading(false)
+  }, [])
+  useEffect(() => { load() }, [load])
+  return { patient, loading, refresh: load }
+}
+
+export function useMyTrips(patientName) {
+  const [trips, setTrips] = useState([])
+  const [loading, setLoading] = useState(true)
+  const load = useCallback(() => {
+    if (!patientName) { setLoading(false); return }
+    setLoading(true)
+    supabase.from('trips').select('*')
+      .ilike('patient', patientName)
+      .order('date', { ascending: false })
+      .then(({ data }) => { setTrips((data || []).map(mapTrip)); setLoading(false) })
+  }, [patientName])
+  useEffect(load, [load])
+  return { trips, loading, refresh: load }
 }
 
 // ─── ID Helpers ──────────────────────────────────────────────────────────────

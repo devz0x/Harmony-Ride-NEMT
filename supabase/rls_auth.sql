@@ -1,6 +1,7 @@
 -- ── Restrict all write operations to authenticated users only ────────────────
 -- Run this in the Supabase SQL Editor to replace the open anon write policies.
--- Reads remain public (anon) so the landing page can still work if needed.
+-
+- Reads remain public (anon) so the landing page can still work if needed.
 -- Writes now require a valid Supabase Auth session (signed-in admin).
 
 -- Drivers

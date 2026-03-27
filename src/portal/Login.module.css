@@ -1,0 +1,174 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #1e40af 100%);
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.logo {
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.sub {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 8px;
+  gap: 2px;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #64748b;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtnActive {
+  background: #fff;
+  color: #0d9488;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tabBtn:not(.tabBtnActive):hover {
+  color: #0f172a;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 10px;
+}
+
+.optional {
+  font-weight: 400;
+  text-transform: none;
+  color: #94a3b8;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0f172a;
+  background: #f8fafc;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #0d9488;
+  background: #fff;
+}
+
+.error {
+  font-size: 13px;
+  color: #ef4444;
+  background: #fee2e2;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 4px 0;
+}
+
+.btn {
+  margin-top: 14px;
+  padding: 13px;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.backLink {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.backAnchor {
+  font-size: 13px;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.backAnchor:hover {
+  color: #0d9488;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+}

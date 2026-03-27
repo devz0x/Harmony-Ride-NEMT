@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Phone, Menu, X, Cross } from 'lucide-react'
 import styles from './Navbar.module.css'
 
@@ -50,6 +51,16 @@ export default function Navbar({ onBookNow }) {
               (978) 225-0802
             </a>
           </li>
+          <li>
+            <Link to="/portal/login" className={styles.link} onClick={() => setMenuOpen(false)}>
+              My Portal
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/login" className={styles.adminLinkMobile} onClick={() => setMenuOpen(false)}>
+              Admin
+            </Link>
+          </li>
         </ul>
 
         <div className={styles.actions}>
@@ -57,6 +68,8 @@ export default function Navbar({ onBookNow }) {
             <Phone size={15} />
             (978) 225-0802
           </a>
+          <Link to="/portal/login" className={styles.signInBtn}>My Portal</Link>
+          <Link to="/admin/login" className={styles.adminLink}>Admin</Link>
           <button className={styles.bookBtn} onClick={onBookNow}>
             Book a Ride
           </button>

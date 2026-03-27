@@ -88,7 +88,7 @@ export default function Footer() {
                 <li><a href="#">Book a Ride</a></li>
                 <li><a href="#">Cancel/Modify</a></li>
                 <li><a href="#">Track Your Ride</a></li>
-                <li><a href="#">Patient Portal</a></li>
+                <li><a href="/portal">Patient Portal</a></li>
                 <li><a href="#">Contact Us</a></li>
                 <li><a href="#">FAQ</a></li>
               </ul>

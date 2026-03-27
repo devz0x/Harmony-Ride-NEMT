@@ -19,7 +19,7 @@ const EMPTY = {
   patient: '', dob: '', phone: '', pickup: '', destination: '',
   date: today, time: '', return_time: '', type: 'oneway',
   transport: 'ambulatory', driver: '', vehicle: '',
-  insurance: 'Medicaid', status: 'pending', notes: '',
+  insurance: 'Medicaid', status: 'pending', notes: '', mileage: '',
 }
 
 const PER_PAGE = 8
@@ -85,6 +85,7 @@ export default function Trips() {
       insurance:   form.insurance,
       status:      form.status,
       notes:       form.notes        || null,
+      mileage:     form.mileage ? parseFloat(form.mileage) : null,
     }
     let result
     if (modal === 'create') {
@@ -499,9 +500,14 @@ function TripModal({ trip, isNew, drivers, vehicles, patients, saving, error, on
             </F>
           </Row2>
 
-          <F label="Notes">
-            <textarea style={{ ...inp, height: '72px', resize: 'vertical' }} value={form.notes || ''} onChange={e => set('notes', e.target.value)}/>
-          </F>
+          <Row2>
+            <F label="Mileage">
+              <input style={inp} type="number" min="0" step="0.1" placeholder="0.0" value={form.mileage || ''} onChange={e => set('mileage', e.target.value)}/>
+            </F>
+            <F label="Notes">
+              <textarea style={{ ...inp, height: '72px', resize: 'vertical' }} value={form.notes || ''} onChange={e => set('notes', e.target.value)}/>
+            </F>
+          </Row2>
 
           {error && <p style={{ fontSize: '13px', color: '#ef4444', margin: 0 }}>{error}</p>}
 

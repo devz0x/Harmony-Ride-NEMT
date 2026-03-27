@@ -79,6 +79,21 @@ input, select, textarea {
   padding: 0 24px;
 }
 
+/* ── Invoice PDF Print Isolation ─────────────────────────────────────────── */
+/* When window.print() fires, ONLY #invoice-print-root is visible.           */
+#invoice-print-root { display: none; }
+
+@media print {
+  @page { margin: 0.5in; size: letter portrait; }
+  body > *:not(#invoice-print-root) { display: none !important; }
+  #invoice-print-root {
+    display: block !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: #1e293b;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

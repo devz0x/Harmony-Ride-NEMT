@@ -29,6 +29,24 @@
 
 .newBtn:hover { transform: translateY(-1px); }
 
+.genBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0d9488, #0c2d5a);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.genBtn:hover { transform: translateY(-1px); }
+
 /* Summary */
 .summary {
   display: grid;
@@ -302,6 +320,23 @@
   cursor: pointer;
 }
 
+.downloadPdfBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #0d9488;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.downloadPdfBtn:hover { background: #0f766e; }
+
 .closeBtn {
   width: 32px;
   height: 32px;
@@ -321,7 +356,7 @@
 /* ─── Invoice Document ─────────────────────────────────── */
 
 .doc {
-  padding: 48px 52px;
+  padding: 44px 48px;
   color: #1e293b;
   background: white;
 }
@@ -330,7 +365,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   gap: 24px;
 }
 
@@ -338,74 +373,83 @@
 .docLogo { flex-shrink: 0; margin-top: 2px; }
 
 .docCompanyName {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
   color: #0d9488;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   letter-spacing: -0.3px;
 }
 
 .docCompanyInfo {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #64748b;
   line-height: 1.65;
 }
 
-.docInvoiceInfo { text-align: right; flex-shrink: 0; }
-
 .docInvoiceTitle {
-  font-size: 2.4rem;
+  font-size: 2.8rem;
   font-weight: 900;
-  color: #0c2d5a;
-  letter-spacing: 3px;
-  margin-bottom: 12px;
+  color: #1e6fa8;
+  letter-spacing: 4px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
-.docMetaTable { border-collapse: collapse; margin-left: auto; }
-
-.docMetaLabel {
-  font-size: 0.8rem;
-  color: #64748b;
-  font-weight: 600;
-  padding: 3px 10px 3px 0;
-  text-align: right;
+/* Bill To + Invoice Details row */
+.docInfoRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.docMetaValue { font-size: 0.82rem; color: #0f172a; font-weight: 600; padding: 3px 0; }
-
-/* Bill To */
-.docBillTo {
-  border-left: 4px solid #1e6fa8;
-  padding: 10px 16px;
-  background: #f8fafc;
-  border-radius: 0 8px 8px 0;
-  margin-bottom: 32px;
+.docInfoBox {
+  background: #e8f4fd;
+  border-radius: 8px;
+  padding: 14px 18px;
 }
 
-.docBillToLabel {
+.docInfoBoxLabel {
   font-size: 0.68rem;
   font-weight: 700;
-  color: #64748b;
+  color: #1e6fa8;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
+  letter-spacing: 0.8px;
+  margin-bottom: 7px;
 }
 
-.docBillToName { font-size: 1rem; font-weight: 700; color: #0f172a; }
-
-/* Section */
-.docSectionTitle {
-  font-size: 0.82rem;
-  font-weight: 800;
+.docInfoBoxName {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #0f172a;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.docInfoBoxAddr {
+  font-size: 0.8rem;
+  color: #334155;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.docDetailsTable { border-collapse: collapse; width: 100%; }
+.docDetailKey {
+  font-size: 0.78rem;
+  color: #475569;
+  font-weight: 500;
+  padding: 3px 16px 3px 0;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.docDetailVal {
+  font-size: 0.78rem;
+  color: #0f172a;
+  font-weight: 700;
+  padding: 3px 0;
 }
 
 /* Services table */
-.docTable { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.docTable { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 0; }
 
 .docTh {
   padding: 9px 10px;
@@ -425,18 +469,6 @@
 
 .docTd { padding: 8px 10px; color: #334155; vertical-align: top; line-height: 1.45; }
 
-/* Total */
-.docTotal {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 0 20px;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 20px;
-}
-
-.docTotalRow { display: flex; align-items: center; gap: 24px; }
-.docTotalLabel { font-size: 1rem; font-weight: 700; color: #0f172a; }
-.docTotalAmount { font-size: 1.5rem; font-weight: 900; color: #0c2d5a; letter-spacing: -0.5px; }
 
 /* Status banners */
 .docDenied {
@@ -450,7 +482,7 @@
   padding: 10px 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin: 16px 0 12px;
 }
 
 .docPaid {
@@ -464,17 +496,274 @@
   padding: 10px 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin: 16px 0 12px;
 }
 
-/* Footer */
-.docFooter {
-  text-align: center;
-  border-top: 1px solid #e2e8f0;
+/* Bold service name column */
+.docTdService { font-weight: 700; color: #0f172a; }
+
+/* Ways to pay footer */
+.docWaysToPay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid #0c2d5a;
   padding-top: 16px;
+  margin-top: 4px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.docFooter p { font-size: 0.76rem; color: #94a3b8; line-height: 1.8; }
+.docWaysLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.docWaysLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.docPayBadges {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.docPayBadge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.docWaysRight {}
+
+.docWaysTotal {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #0c2d5a;
+  letter-spacing: -0.5px;
+}
+
+/* ─── Rate Reference Card ───────────────────────────────────── */
+
+.rateCard {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rateCardToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 18px;
+  background: #f8fafc;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.rateCardToggle:hover { background: #f0f8ff; color: #1e6fa8; }
+
+.rateCardBody {
+  padding: 16px 18px;
+  border-top: 1.5px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rateGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rateRow {
+  display: grid;
+  grid-template-columns: 130px 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.78rem;
+  padding: 6px 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+}
+
+.rateMode {
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.rateStd { color: #16a34a; font-weight: 600; }
+.rateAh  { color: #d97706; font-weight: 600; }
+
+.rateExtras {
+  font-size: 0.76rem;
+  color: #475569;
+  line-height: 1.7;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 10px;
+}
+
+/* ─── Generate Modal ────────────────────────────────────────── */
+
+.genModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.genModal {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 760px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.genModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+
+.genModalTitle { font-size: 1rem; font-weight: 800; color: #0f172a; }
+
+.genModalBody { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.genRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.genLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 5px;
+}
+
+.genInput {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  font-family: inherit;
+  background: white;
+}
+
+.genInput:focus { outline: none; border-color: #1e6fa8; }
+
+.genTripList { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; }
+
+.genTripRow {
+  display: grid;
+  grid-template-columns: 80px 1fr 90px 100px 90px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.genTripDate  { color: #64748b; font-weight: 600; }
+.genTripName  { color: #0f172a; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.genTripMode  { color: #475569; text-transform: capitalize; }
+.genTripCost  { color: #16a34a; font-weight: 700; text-align: right; }
+
+.genTripMileInput {
+  width: 100%;
+  padding: 4px 7px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+
+.genTripMileInput:focus { outline: none; border-color: #1e6fa8; }
+
+.genEmpty {
+  text-align: center;
+  padding: 32px 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.genModalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 24px;
+  border-top: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.genCancelBtn {
+  padding: 9px 18px;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+
+.genCreateBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, #1e6fa8, #0c2d5a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.genCreateBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Responsive */
 @media (max-width: 1000px) { .summary { grid-template-columns: repeat(2, 1fr); } }

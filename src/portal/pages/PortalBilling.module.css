@@ -1,0 +1,507 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 760px;
+}
+
+.loading {
+  padding: 48px;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.pageHeader { margin-bottom: 4px; }
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+}
+
+.sub {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* ── Insurance Card ───────────────────────────────────────────────────────── */
+
+.insuranceCard {
+  background: linear-gradient(135deg, #f0fdfa, #e0f2fe);
+  border: 1.5px solid #99f6e4;
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.insuranceTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.insuranceLabel {
+  margin: 0 0 3px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #0d9488;
+}
+
+.insurancePlan {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.selfPayBadge {
+  display: inline-block;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.coveredBadge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid rgba(255,255,255,0.6);
+  padding-top: 12px;
+}
+
+.memberLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.memberId {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: monospace;
+  background: rgba(255,255,255,0.7);
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+
+/* ── Section ──────────────────────────────────────────────────────────────── */
+
+.section {}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px;
+}
+
+.loadingInner {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.noTrips {
+  padding: 24px;
+  text-align: center;
+  color: #94a3b8;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ── Cost Table ───────────────────────────────────────────────────────────── */
+
+.costTable {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.costTableHeader {
+  display: grid;
+  grid-template-columns: 100px 1fr 120px 120px;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.costRow {
+  display: grid;
+  grid-template-columns: 100px 1fr 120px 120px;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+}
+
+.costRow:last-of-type {
+  border-bottom: none;
+}
+
+.costDate {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.costRoute {
+  font-size: 0.85rem;
+  color: #334155;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.costTransport {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: capitalize;
+}
+
+.costAmount {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.costFooter {
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.costNote {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0 0 10px;
+  font-style: italic;
+}
+
+.totalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.totalLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.totalAmount {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0d9488;
+}
+
+/* ── Pay Now Button ───────────────────────────────────────────────────────── */
+
+.payNowBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.payNowBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ── Insurance Billing Card ───────────────────────────────────────────────── */
+
+.insuranceBillingCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.insuredNote {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.contactItems {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0d9488;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.contactItem:hover {
+  color: #0f172a;
+}
+
+.statementBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  width: fit-content;
+  background: #f0fdfa;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.statementBtn:hover {
+  background: #0d9488;
+  color: white;
+}
+
+/* ── Pay Modal ────────────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.modalClose:hover { color: #0f172a; }
+
+.modalAmount {
+  background: #f0fdfa;
+  border: 1.5px solid #99f6e4;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.modalAmountLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #0d9488;
+}
+
+.modalAmountValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.paymentOptions {}
+
+.payCardBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  cursor: pointer;
+}
+
+.payCardBtn:hover { opacity: 0.88; }
+
+.payComingSoon {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.payComingSoon p {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.payComingSoon p:last-child { margin: 0; }
+
+.payComingSoon a {
+  color: #0d9488;
+  font-weight: 600;
+}
+
+.paymentIcons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.cardBadge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 4px 9px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  background: #f8fafc;
+}
+
+.payReference {
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+}
+
+.phonePayRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.phonePayRow a {
+  color: #0d9488;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .costTableHeader,
+  .costRow {
+    grid-template-columns: 90px 1fr 100px;
+  }
+
+  .costTableHeader span:last-child,
+  .costAmount {
+    display: none;
+  }
+
+  .costFooter .totalRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

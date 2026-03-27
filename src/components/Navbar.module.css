@@ -146,6 +146,46 @@
   text-decoration: none;
 }
 
+.signInBtn {
+  display: flex;
+  align-items: center;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.signInBtn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.6);
+  color: white;
+}
+
+.adminLink {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+.adminLink:hover { color: rgba(255,255,255,0.7); }
+
+.adminLinkMobile {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: block;
+}
+.adminLinkMobile:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
+
 @media (max-width: 768px) {
   .nav {
     background: rgba(12, 45, 90, 0.97);
@@ -181,6 +221,14 @@
   }
 
   .phoneDesktop {
+    display: none;
+  }
+
+  .signInBtn {
+    display: none;
+  }
+
+  .adminLink {
     display: none;
   }
 

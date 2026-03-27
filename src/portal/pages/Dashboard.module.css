@@ -1,0 +1,326 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.loading {
+  padding: 48px;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.noPatient {
+  padding: 48px 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.noPatient a {
+  color: #0d9488;
+}
+
+/* ── Welcome Banner ───────────────────────────────────────────────────────── */
+
+.welcome {
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: white;
+}
+
+.welcomeTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+}
+
+.welcomeSub {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.88;
+}
+
+/* ── Section ──────────────────────────────────────────────────────────────── */
+
+.section {}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px;
+  letter-spacing: -0.2px;
+}
+
+/* ── Next Trip Card ───────────────────────────────────────────────────────── */
+
+.nextTripCard {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 4px solid #0d9488;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(to right, #f0fdfa, #fff);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nextTripHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nextTripDate {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nextTripRoute {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.routePoint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: #334155;
+  flex: 1;
+  min-width: 140px;
+}
+
+.routeIconStart {
+  color: #0d9488;
+  flex-shrink: 0;
+}
+
+.routeIconEnd {
+  color: #0891b2;
+  flex-shrink: 0;
+}
+
+.routeArrow {
+  color: #94a3b8;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.nextTripMeta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #64748b;
+  text-transform: capitalize;
+}
+
+.transportIcon {
+  font-size: 1rem;
+}
+
+/* ── Badges ───────────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.03em;
+}
+
+.statusPending   { background: #ede9fe; color: #6d28d9; }
+.statusConfirmed { background: #dbeafe; color: #1d4ed8; }
+.statusTransit   { background: #fff7ed; color: #c2410c; }
+.statusCompleted { background: #dcfce7; color: #15803d; }
+.statusCancelled { background: #f1f5f9; color: #64748b; }
+
+/* ── No upcoming trip ─────────────────────────────────────────────────────── */
+
+.noTrip {
+  background: #fff;
+  border-radius: 14px;
+  border: 2px dashed #cbd5e1;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.noTrip p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.requestBtn {
+  display: inline-block;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: white;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.requestBtn:hover {
+  opacity: 0.9;
+}
+
+/* ── Stats Grid ───────────────────────────────────────────────────────────── */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.statUpcoming  { color: #0891b2; }
+.statCompleted { color: #15803d; }
+
+.statLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Quick Actions ────────────────────────────────────────────────────────── */
+
+.actionsRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 150px;
+  justify-content: center;
+}
+
+.actionGreen {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  box-shadow: 0 2px 8px rgba(34,197,94,0.25);
+}
+
+.actionGreen:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(34,197,94,0.35);
+}
+
+.actionBlue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+}
+
+.actionBlue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(59,130,246,0.35);
+}
+
+.actionGray {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+}
+
+.actionGray:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .welcome {
+    padding: 22px 20px;
+  }
+
+  .welcomeTitle {
+    font-size: 1.4rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .statCard {
+    padding: 14px 10px;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .actionsRow {
+    flex-direction: column;
+  }
+
+  .nextTripRoute {
+    flex-direction: column;
+  }
+
+  .routeArrow {
+    transform: rotate(90deg);
+  }
+}

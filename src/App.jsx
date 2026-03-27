@@ -15,6 +15,16 @@ import BookingCTA from './components/BookingCTA'
 import Footer from './components/Footer'
 import BookingModal from './components/BookingModal'
 
+// Portal
+import PortalGuard from './portal/PortalGuard'
+import PortalLogin from './portal/Login'
+import PortalLayout from './portal/PortalLayout'
+import PortalDashboard from './portal/pages/Dashboard'
+import MyTrips from './portal/pages/MyTrips'
+import RequestTrip from './portal/pages/RequestTrip'
+import PortalBilling from './portal/pages/PortalBilling'
+import PortalAccount from './portal/pages/Account'
+
 // Admin
 import AuthGuard from './admin/AuthGuard'
 import Login from './admin/Login'
@@ -53,6 +63,14 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/portal/login" element={<PortalLogin />} />
+        <Route path="/portal" element={<PortalGuard><PortalLayout /></PortalGuard>}>
+          <Route index element={<PortalDashboard />} />
+          <Route path="trips" element={<MyTrips />} />
+          <Route path="request" element={<RequestTrip />} />
+          <Route path="billing" element={<PortalBilling />} />
+          <Route path="account" element={<PortalAccount />} />
+        </Route>
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<AuthGuard><AdminLayout /></AuthGuard>}>
           <Route index element={<Dashboard />} />

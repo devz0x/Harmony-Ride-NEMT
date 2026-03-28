@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Search, Plus, Phone, Mail, Star, AlertTriangle, X, Trash2 } from 'lucide-react'
 import { useDrivers, useVehicles, db } from '../../lib/useData'
 import Typeahead from '../../components/Typeahead'
@@ -35,12 +36,26 @@ const EMPTY = {
 export default function Drivers() {
   const { drivers, loading, refresh } = useDrivers()
   const { vehicles } = useVehicles()
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const consumed  = useRef(false)
+
   const [search, setSearch]     = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [selected, setSelected] = useState(null)
   const [modal, setModal]       = useState(null)   // null | 'create' | driver obj
   const [saving, setSaving]     = useState(false)
   const [error, setError]       = useState('')
+
+  // Auto-select record when navigated here from universal search
+  useEffect(() => {
+    if (loading || consumed.current) return
+    const { selectId } = location.state || {}
+    if (!selectId) return
+    setSelected(selectId)
+    consumed.current = true
+    navigate(location.pathname, { replace: true, state: null })
+  }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = drivers.filter(d => {
     const q = search.toLowerCase()

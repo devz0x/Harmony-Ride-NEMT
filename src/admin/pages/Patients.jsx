@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Search, Plus, Phone, Mail, AlertTriangle, Flag, X, Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePatients, db } from '../../lib/useData'
 import Typeahead from '../../components/Typeahead'
@@ -29,6 +30,10 @@ const EMPTY = {
 
 export default function Patients() {
   const { patients, loading, refresh } = usePatients()
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const consumed  = useRef(false)
+
   const [search, setSearch]         = useState('')
   const [statusFilter, setStatusFilter]     = useState('all')
   const [transportFilter, setTransportFilter] = useState('all')
@@ -54,6 +59,16 @@ export default function Patients() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
   const sel        = patients.find(p => p.id === selected)
+
+  // Auto-select record when navigated here from universal search
+  useEffect(() => {
+    if (loading || consumed.current) return
+    const { selectId } = location.state || {}
+    if (!selectId) return
+    setSelected(selectId)
+    consumed.current = true
+    navigate(location.pathname, { replace: true, state: null })
+  }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function resetPage() { setPage(1) }
 

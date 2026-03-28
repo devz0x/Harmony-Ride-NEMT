@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Search, Plus, Eye, Edit, Trash2, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTrips, useDrivers, useVehicles, usePatients, db } from '../../lib/useData'
 import Typeahead from '../../components/Typeahead'
@@ -30,6 +31,9 @@ export default function Trips() {
   const { drivers }                  = useDrivers()
   const { vehicles }                 = useVehicles()
   const { patients }                 = usePatients()
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const consumed  = useRef(false)
 
   const [search, setSearch]                 = useState('')
   const [statusFilter, setStatusFilter]     = useState('all')
@@ -63,6 +67,16 @@ export default function Trips() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
   const selTrip    = trips.find(t => t.id === selected)
+
+  // Auto-select record when navigated here from universal search
+  useEffect(() => {
+    if (loading || consumed.current) return
+    const { selectId } = location.state || {}
+    if (!selectId) return
+    setSelected(selectId)
+    consumed.current = true
+    navigate(location.pathname, { replace: true, state: null })
+  }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function resetPage() { setPage(1) }
 

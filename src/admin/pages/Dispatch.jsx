@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Phone, MapPin, Clock, AlertTriangle, User, Car, Navigation, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTrips, useDrivers, useVehicles, usePatients, db } from '../../lib/useData'
 import styles from './Dispatch.module.css'
@@ -21,8 +22,22 @@ export default function Dispatch() {
   const { drivers }        = useDrivers()
   const { vehicles }       = useVehicles()
   const { patients }       = usePatients()
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const consumed  = useRef(false)
+
   const [assign, setAssign]   = useState(null)
   const [viewDate, setViewDate] = useState(new Date().toISOString().slice(0, 10))
+
+  // Jump to the date from universal search
+  useEffect(() => {
+    if (consumed.current) return
+    const { selectDate } = location.state || {}
+    if (!selectDate) return
+    setViewDate(selectDate)
+    consumed.current = true
+    navigate(location.pathname, { replace: true, state: null })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const today          = new Date().toISOString().slice(0, 10)
   const isToday        = viewDate === today

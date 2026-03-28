@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import {
   DollarSign, CheckCircle, Clock, XCircle, FileDown, Eye,
@@ -23,12 +24,28 @@ const EMPTY_LINE = { service:'', description:'', qty:1, rate:0, amount:0 }
 
 export default function Billing() {
   const { invoices, loading, refresh } = useInvoices()
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const consumed  = useRef(false)
+
   const [filter, setFilter]         = useState('all')
   const [preview, setPreview]       = useState(null)
   const [modal, setModal]           = useState(null)   // null | 'create' | invoice obj
   const [denyModal, setDenyModal]   = useState(null)
   const [genModal, setGenModal]     = useState(false)  // Generate from Trips
   const [printInvoice, setPrintInvoice] = useState(null)
+
+  // Auto-open invoice preview when navigated here from universal search
+  useEffect(() => {
+    if (loading || consumed.current) return
+    const { selectId } = location.state || {}
+    if (!selectId) return
+    const inv = invoices.find(i => i.id === selectId)
+    if (!inv) return
+    setPreview(inv)
+    consumed.current = true
+    navigate(location.pathname, { replace: true, state: null })
+  }, [loading, invoices]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = filter === 'all' ? invoices : invoices.filter(r => r.status === filter)
 

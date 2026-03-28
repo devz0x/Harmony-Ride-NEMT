@@ -16,6 +16,7 @@ export default function AdminLayout() {
   const [authUser, setAuthUser]         = useState(null)
   const [searchQ, setSearchQ]           = useState('')
   const [searchOpen, setSearchOpen]     = useState(false)
+  const [searchCursor, setSearchCursor] = useState(-1)
   const [notifOpen, setNotifOpen]       = useState(false)
   const [userOpen, setUserOpen]         = useState(false)
   const searchRef = useRef(null)
@@ -68,33 +69,96 @@ export default function AdminLayout() {
     { label: 'Settings',  icon: Settings,         path: '/admin/settings' },
   ]
 
-  // ── Search ──────────────────────────────────────────────────────────────────
+  // ── Universal Search ─────────────────────────────────────────────────────────
+  const todayStr = new Date().toISOString().slice(0, 10)
   const q = searchQ.trim().toLowerCase()
+
+  function close() { setSearchQ(''); setSearchOpen(false); setSearchCursor(-1) }
+
   const searchResults = q.length < 2 ? [] : [
+    // Trips
     ...trips.filter(t =>
-      t.patient?.toLowerCase().includes(q) ||
-      t.pickup?.toLowerCase().includes(q) ||
+      t.id?.toLowerCase().includes(q)        ||
+      t.patient?.toLowerCase().includes(q)   ||
+      t.pickup?.toLowerCase().includes(q)    ||
       t.destination?.toLowerCase().includes(q)
-    ).slice(0, 4).map(t => ({
-      type: 'Trip', icon: <Car size={14}/>, label: t.patient, sub: `${t.date} · ${t.pickup} → ${t.destination}`,
-      action: () => { navigate('/admin/trips'); setSearchQ(''); setSearchOpen(false) },
+    ).slice(0, 3).map(t => ({
+      type: 'Trip', icon: <Car size={14}/>, iconBg: '#dbeeff', iconColor: '#1e6fa8',
+      label: `${t.id} — ${t.patient}`,
+      sub: `${t.date} · ${t.pickup?.split(',')[0]} → ${t.destination?.split(',')[0]}`,
+      action: () => { navigate('/admin/trips', { state: { selectId: t.id } }); close() },
     })),
+    // Dispatch — today's pending / confirmed / in-transit trips
+    ...trips.filter(t =>
+      t.date >= todayStr &&
+      ['pending', 'confirmed', 'in-transit'].includes(t.status) &&
+      (t.patient?.toLowerCase().includes(q) || t.id?.toLowerCase().includes(q) || t.driver?.toLowerCase().includes(q))
+    ).slice(0, 2).map(t => ({
+      type: 'Dispatch', icon: <MapPin size={14}/>, iconBg: '#ede9fe', iconColor: '#7c3aed',
+      label: `${t.patient} · ${t.status}`,
+      sub: `${t.date} ${t.time || ''} · ${t.driver || '⚠ Unassigned'}`,
+      action: () => { navigate('/admin/dispatch', { state: { selectDate: t.date } }); close() },
+    })),
+    // Patients
     ...patients.filter(p =>
-      p.name?.toLowerCase().includes(q) ||
-      p.phone?.toLowerCase().includes(q) ||
+      p.id?.toLowerCase().includes(q)        ||
+      p.name?.toLowerCase().includes(q)      ||
+      p.phone?.includes(q)                   ||
       p.insurance?.toLowerCase().includes(q)
     ).slice(0, 3).map(p => ({
-      type: 'Patient', icon: <Users size={14}/>, label: p.name, sub: `${p.insurance} · ${p.phone || 'No phone'}`,
-      action: () => { navigate('/admin/patients'); setSearchQ(''); setSearchOpen(false) },
+      type: 'Patient', icon: <Users size={14}/>, iconBg: '#d1fae5', iconColor: '#16a34a',
+      label: p.name,
+      sub: `${p.id} · ${p.insurance} · ${p.phone || 'No phone'}`,
+      action: () => { navigate('/admin/patients', { state: { selectId: p.id } }); close() },
     })),
+    // Drivers
     ...drivers.filter(d =>
-      d.name?.toLowerCase().includes(q) ||
-      d.phone?.toLowerCase().includes(q)
+      d.id?.toLowerCase().includes(q)      ||
+      d.name?.toLowerCase().includes(q)    ||
+      d.phone?.includes(q)                 ||
+      d.vehicle?.toLowerCase().includes(q)
     ).slice(0, 2).map(d => ({
-      type: 'Driver', icon: <UserCheck size={14}/>, label: d.name, sub: `${d.status} · ${d.phone || ''}`,
-      action: () => { navigate('/admin/drivers'); setSearchQ(''); setSearchOpen(false) },
+      type: 'Driver', icon: <UserCheck size={14}/>, iconBg: '#fef3c7', iconColor: '#d97706',
+      label: d.name,
+      sub: `${d.id} · ${d.status} · ${d.vehicle || 'No vehicle'}`,
+      action: () => { navigate('/admin/drivers', { state: { selectId: d.id } }); close() },
     })),
+    // Fleet
+    ...vehicles.filter(v =>
+      v.id?.toLowerCase().includes(q)    ||
+      v.make?.toLowerCase().includes(q)  ||
+      v.plate?.toLowerCase().includes(q) ||
+      v.driver?.toLowerCase().includes(q)||
+      v.type?.toLowerCase().includes(q)
+    ).slice(0, 2).map(v => ({
+      type: 'Fleet', icon: <Truck size={14}/>, iconBg: '#fee2e2', iconColor: '#ef4444',
+      label: `${v.id} — ${v.make}`,
+      sub: `${v.type} · ${v.status} · Plate: ${v.plate || '—'}`,
+      action: () => { navigate('/admin/fleet', { state: { selectId: v.id } }); close() },
+    })),
+    // Billing / Invoices
+    ...invoices.filter(i =>
+      i.id?.toLowerCase().includes(q)     ||
+      i.billTo?.toLowerCase().includes(q) ||
+      i.status?.toLowerCase().includes(q)
+    ).slice(0, 2).map(i => {
+      const total = (i.lineItems || []).reduce((s, l) => s + l.amount, 0)
+      return {
+        type: 'Billing', icon: <CreditCard size={14}/>, iconBg: '#dbeeff', iconColor: '#1e6fa8',
+        label: `${i.id} · ${i.billTo}`,
+        sub: `${i.status} · $${total.toFixed(2)} · ${i.invoiceDate || ''}`,
+        action: () => { navigate('/admin/billing', { state: { selectId: i.id } }); close() },
+      }
+    }),
   ]
+
+  function handleSearchKey(e) {
+    if (!searchOpen || searchResults.length === 0) return
+    if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor(c => Math.min(c + 1, searchResults.length - 1)) }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); setSearchCursor(c => Math.max(c - 1, -1)) }
+    if (e.key === 'Enter' && searchCursor >= 0) { e.preventDefault(); searchResults[searchCursor].action() }
+    if (e.key === 'Escape') { setSearchOpen(false); setSearchCursor(-1) }
+  }
 
   // ── Notifications ───────────────────────────────────────────────────────────
   const notifications = [
@@ -205,15 +269,16 @@ export default function AdminLayout() {
             <input
               id="admin-search"
               type="search"
-              aria-label="Search trips, patients, drivers"
-              placeholder="Search trips, patients, drivers..."
+              aria-label="Universal search — trips, dispatch, patients, drivers, fleet, billing"
+              placeholder="Search anything — trips, patients, drivers, invoices…"
               className={styles.searchInput}
               value={searchQ}
               aria-expanded={searchOpen && searchQ.length >= 2}
               aria-autocomplete="list"
               aria-controls="search-results"
-              onChange={e => { setSearchQ(e.target.value); setSearchOpen(true) }}
+              onChange={e => { setSearchQ(e.target.value); setSearchOpen(true); setSearchCursor(-1) }}
               onFocus={() => setSearchOpen(true)}
+              onKeyDown={handleSearchKey}
             />
             <div
               id="search-results"
@@ -227,16 +292,34 @@ export default function AdminLayout() {
                   {searchResults.length === 0 ? (
                     <div className={styles.searchEmpty}>No results for "{searchQ}"</div>
                   ) : (
-                    searchResults.map((r, i) => (
-                      <button key={i} className={styles.searchResult} onClick={r.action} role="option">
-                        <span className={styles.searchResultIcon} aria-hidden="true">{r.icon}</span>
-                        <span className={styles.searchResultBody}>
-                          <span className={styles.searchResultLabel}>{r.label}</span>
-                          <span className={styles.searchResultSub}>{r.sub}</span>
-                        </span>
-                        <span className={styles.searchResultType}>{r.type}</span>
-                      </button>
-                    ))
+                    searchResults.map((r, i) => {
+                      const isFirstOfType = i === 0 || searchResults[i - 1].type !== r.type
+                      return (
+                        <div key={i}>
+                          {isFirstOfType && (
+                            <div className={styles.searchGroupHeader}>{r.type}</div>
+                          )}
+                          <button
+                            className={`${styles.searchResult} ${i === searchCursor ? styles.searchResultActive : ''}`}
+                            onClick={r.action}
+                            role="option"
+                            aria-selected={i === searchCursor}
+                          >
+                            <span
+                              className={styles.searchResultIcon}
+                              aria-hidden="true"
+                              style={{ background: r.iconBg, color: r.iconColor }}
+                            >
+                              {r.icon}
+                            </span>
+                            <span className={styles.searchResultBody}>
+                              <span className={styles.searchResultLabel}>{r.label}</span>
+                              <span className={styles.searchResultSub}>{r.sub}</span>
+                            </span>
+                          </button>
+                        </div>
+                      )
+                    })
                   )}
                 </div>
               )}

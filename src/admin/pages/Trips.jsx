@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Search, Plus, Eye, Edit, Trash2, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTrips, useDrivers, useVehicles, usePatients, db } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import styles from './Trips.module.css'
 
 const STATUS_OPTS    = ['all', 'pending', 'confirmed', 'in-transit', 'completed', 'no-show', 'cancelled']
@@ -343,6 +344,7 @@ export default function Trips() {
           drivers={drivers}
           vehicles={vehicles}
           patients={patients}
+          allTrips={trips}
           saving={saving}
           error={error}
           onSave={saveTrip}
@@ -374,9 +376,13 @@ function Detail({ label, value }) {
 }
 
 // ── Trip Modal ────────────────────────────────────────────────────────────────
-function TripModal({ trip, isNew, drivers, vehicles, patients, saving, error, onSave, onClose }) {
+function TripModal({ trip, isNew, drivers, vehicles, patients, allTrips, saving, error, onSave, onClose }) {
   const [form, setForm] = useState({ ...trip })
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const patientNames   = patients.map(p => p.name)
+  const uniquePickups  = [...new Set(allTrips.map(t => t.pickup).filter(Boolean))]
+  const uniqueDests    = [...new Set(allTrips.map(t => t.destination).filter(Boolean))]
 
   // When a patient is selected from the dropdown, auto-fill their info
   function selectPatient(patientId) {
@@ -423,7 +429,7 @@ function TripModal({ trip, isNew, drivers, vehicles, patients, saving, error, on
 
           <Row2>
             <F label="Patient Name *">
-              <input style={inp} required value={form.patient} onChange={e => set('patient', e.target.value)}/>
+              <Typeahead style={inp} required value={form.patient} onChange={v => set('patient', v)} suggestions={patientNames} placeholder="Patient full name"/>
             </F>
             <F label="Phone">
               <input style={inp} value={form.phone || ''} onChange={e => set('phone', e.target.value)}/>
@@ -442,10 +448,10 @@ function TripModal({ trip, isNew, drivers, vehicles, patients, saving, error, on
           </Row2>
 
           <F label="Pickup Address *">
-            <input style={inp} required value={form.pickup} onChange={e => set('pickup', e.target.value)}/>
+            <Typeahead style={inp} required value={form.pickup} onChange={v => set('pickup', v)} suggestions={uniquePickups} placeholder="123 Main St, Tampa, FL"/>
           </F>
           <F label="Destination *">
-            <input style={inp} required value={form.destination} onChange={e => set('destination', e.target.value)}/>
+            <Typeahead style={inp} required value={form.destination} onChange={v => set('destination', v)} suggestions={uniqueDests} placeholder="Tampa General Hospital, 1 Tampa General Cir"/>
           </F>
 
           <Row2>

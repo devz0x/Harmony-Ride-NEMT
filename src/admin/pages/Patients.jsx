@@ -1,7 +1,18 @@
 import { useState } from 'react'
 import { Search, Plus, Phone, Mail, AlertTriangle, Flag, X, Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePatients, db } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import styles from './Patients.module.css'
+
+const COMMON_CONDITIONS = [
+  'Diabetes', 'Type 2 Diabetes', 'Hypertension', 'COPD', 'Heart Disease',
+  'Congestive Heart Failure', 'Chronic Kidney Disease', 'End-Stage Renal Disease',
+  'Dialysis', 'Cancer', 'Stroke', 'Dementia', 'Alzheimer\'s Disease',
+  'Parkinson\'s Disease', 'Multiple Sclerosis', 'Obesity', 'Asthma',
+  'Arthritis', 'Osteoporosis', 'Peripheral Neuropathy', 'Depression', 'Anxiety',
+  'Schizophrenia', 'Epilepsy', 'HIV/AIDS', 'Sickle Cell Disease',
+  'Spinal Cord Injury', 'Traumatic Brain Injury', 'Hip Replacement', 'Amputation',
+]
 
 const STATUS_OPTS   = ['all', 'active', 'inactive', 'flagged']
 const TRANSPORT_OPTS = ['all', 'ambulatory', 'wheelchair', 'stretcher', 'bariatric']
@@ -337,6 +348,7 @@ export default function Patients() {
         <PatientModal
           patient={modal === 'create' ? EMPTY : modal}
           isNew={modal === 'create'}
+          patients={patients}
           saving={saving}
           error={error}
           onSave={savePatient}
@@ -356,9 +368,16 @@ function DRow({ label, value }) {
   )
 }
 
-function PatientModal({ patient, isNew, saving, error, onSave, onClose }) {
+function PatientModal({ patient, isNew, patients, saving, error, onSave, onClose }) {
   const [form, setForm] = useState({ ...patient })
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const conditionSuggestions = [
+    ...new Set([
+      ...COMMON_CONDITIONS,
+      ...patients.flatMap(p => p.conditions || []),
+    ])
+  ]
 
   return (
     <div style={overlay} onClick={e => e.target === e.currentTarget && onClose()}>
@@ -417,7 +436,7 @@ function PatientModal({ patient, isNew, saving, error, onSave, onClose }) {
           </Row2>
 
           <F label="Conditions (comma-separated)">
-            <input style={inp} value={form.conditions || ''} onChange={e => set('conditions', e.target.value)} placeholder="Diabetes, Hypertension…"/>
+            <Typeahead style={inp} tokenize value={form.conditions || ''} onChange={v => set('conditions', v)} suggestions={conditionSuggestions} placeholder="Diabetes, Hypertension…"/>
           </F>
 
           <F label="Notes">

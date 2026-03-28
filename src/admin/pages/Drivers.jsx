@@ -1,7 +1,16 @@
 import { useState } from 'react'
 import { Search, Plus, Phone, Mail, Star, AlertTriangle, X, Trash2 } from 'lucide-react'
 import { useDrivers, useVehicles, db } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import styles from './Drivers.module.css'
+
+const CERT_SUGGESTIONS = [
+  'NEMT Certification', 'CPR Certified', 'First Aid', 'BLS (Basic Life Support)',
+  'AED Certified', 'Wheelchair Securement', 'Passenger Assistance Techniques',
+  'HIPAA Compliance', 'Defensive Driving', 'Commercial Driver\'s License (CDL)',
+  'Passenger Endorsement', 'Air Brakes Endorsement', 'Hazmat Endorsement',
+  'Lift Operation', 'Stretcher Transport',
+]
 
 const STATUS_OPTS = ['all', 'on-duty', 'off-duty', 'suspended']
 
@@ -345,7 +354,7 @@ function DriverModal({ driver, isNew, vehicles, saving, error, onSave, onClose }
           </Row2>
 
           <F label="Training / Certifications">
-            <input style={inp} value={form.training || ''} onChange={e => set('training', e.target.value)} placeholder="NEMT, CPR, First Aid…"/>
+            <Typeahead style={inp} tokenize value={form.training || ''} onChange={v => set('training', v)} suggestions={CERT_SUGGESTIONS} placeholder="NEMT, CPR, First Aid…"/>
           </F>
 
           <Row2>

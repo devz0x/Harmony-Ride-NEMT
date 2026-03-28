@@ -1,6 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { X, CheckCircle, ArrowRight, ArrowLeft, User, MapPin, Calendar, Phone, FileText } from 'lucide-react'
+import Typeahead from './Typeahead'
 import styles from './BookingModal.module.css'
+
+const LOCATION_SUGGESTIONS = [
+  'Tampa General Hospital, 1 Tampa General Cir, Tampa, FL 33606',
+  'AdventHealth Tampa, 3100 E Fletcher Ave, Tampa, FL 33613',
+  'St. Joseph\'s Hospital, 3001 W Martin Luther King Jr Blvd, Tampa, FL 33607',
+  'Moffitt Cancer Center, 12902 Magnolia Dr, Tampa, FL 33612',
+  'James A. Haley Veterans\' Hospital, 13000 Bruce B Downs Blvd, Tampa, FL 33612',
+  'Shriners Hospital for Children, 12502 USF Pine Dr, Tampa, FL 33612',
+  'LifePath Hospice & Palliative Care, 3010 W Azeele St, Tampa, FL 33609',
+  'BayCare Outpatient Center – Carrollwood, 3000 Medical Park Dr, Tampa, FL 33613',
+  'DaVita Dialysis – Tampa, 2002 W Cass St, Tampa, FL 33606',
+  'Fresenius Kidney Care Brandon, 1945 W Brandon Blvd, Brandon, FL 33511',
+  'USF Health Morsani College of Medicine, 560 Channelside Dr, Tampa, FL 33602',
+  'Florida Cancer Specialists – Tampa, 3637 W Waters Ave, Tampa, FL 33614',
+  'Bayfront Health St. Petersburg, 701 6th St S, St. Petersburg, FL 33701',
+  'All Children\'s Hospital, 501 6th Ave S, St. Petersburg, FL 33701',
+]
 
 const STEPS = ['Patient Info', 'Trip Details', 'Medical Needs', 'Confirm']
 
@@ -24,6 +42,32 @@ export default function BookingModal({ onClose }) {
     }))
   }
 
+  const modalRef = useRef(null)
+  const titleId = 'booking-modal-title'
+
+  // Focus trap
+  useEffect(() => {
+    const modal = modalRef.current
+    if (!modal) return
+    const focusable = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    first?.focus()
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') { onClose(); return }
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus() }
+      }
+    }
+    modal.addEventListener('keydown', handleKeyDown)
+    return () => modal.removeEventListener('keydown', handleKeyDown)
+  }, [step, submitted, onClose])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (step < 3) { setStep(s => s + 1); return }
@@ -31,15 +75,22 @@ export default function BookingModal({ onClose }) {
   }
 
   return (
-    <div className={styles.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className={styles.modal}>
+    <div className={styles.overlay} onClick={e => e.target === e.currentTarget && onClose()} aria-hidden="true">
+      <div
+        className={styles.modal}
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-hidden="false"
+      >
         {/* Header */}
         <div className={styles.header}>
           <div>
-            <h2 className={styles.title}>Schedule a Ride</h2>
+            <h2 className={styles.title} id={titleId}>Schedule a Ride</h2>
             <p className={styles.subtitle}>Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
           </div>
-          <button className={styles.close} onClick={onClose}><X size={20} /></button>
+          <button className={styles.close} onClick={onClose} aria-label="Close booking modal"><X size={20} aria-hidden="true" /></button>
         </div>
 
         {/* Progress */}
@@ -161,11 +212,11 @@ export default function BookingModal({ onClose }) {
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>Pickup Address *</label>
-                  <input className={styles.input} required value={form.pickupAddress} onChange={e => update('pickupAddress', e.target.value)} placeholder="123 Main St, Tampa, FL 33602" />
+                  <Typeahead className={styles.input} required value={form.pickupAddress} onChange={v => update('pickupAddress', v)} suggestions={LOCATION_SUGGESTIONS} placeholder="123 Main St, Tampa, FL 33602" />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>Destination *</label>
-                  <input className={styles.input} required value={form.destination} onChange={e => update('destination', e.target.value)} placeholder="Tampa General Hospital, 1 Tampa General Cir" />
+                  <Typeahead className={styles.input} required value={form.destination} onChange={v => update('destination', v)} suggestions={LOCATION_SUGGESTIONS} placeholder="Tampa General Hospital, 1 Tampa General Cir" />
                 </div>
                 <div className={styles.row}>
                   <div className={styles.field}>

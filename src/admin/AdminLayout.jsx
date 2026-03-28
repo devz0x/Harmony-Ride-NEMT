@@ -128,8 +128,10 @@ export default function AdminLayout() {
 
   return (
     <div className={styles.layout}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+
       {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`} aria-label="Admin navigation">
         <div className={styles.sidebarHeader}>
           <div className={styles.logo}>
             <div className={styles.logoIcon}>
@@ -144,8 +146,8 @@ export default function AdminLayout() {
               <span className={styles.logoSub}>Admin Portal</span>
             </div>
           </div>
-          <button className={styles.sidebarClose} onClick={() => setSidebarOpen(false)}>
-            <X size={18} />
+          <button className={styles.sidebarClose} onClick={() => setSidebarOpen(false)} aria-label="Close navigation">
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
 
@@ -180,8 +182,8 @@ export default function AdminLayout() {
               <p className={styles.userRole}>{authUser?.email || ''}</p>
             </div>
           </div>
-          <button className={styles.logoutBtn} onClick={handleLogout} title="Sign out">
-            <LogOut size={16} />
+          <button className={styles.logoutBtn} onClick={handleLogout} aria-label="Sign out">
+            <LogOut size={16} aria-hidden="true" />
           </button>
         </div>
       </aside>
@@ -193,39 +195,52 @@ export default function AdminLayout() {
       {/* Main */}
       <div className={styles.main}>
         <header className={styles.topbar}>
-          <button className={styles.menuBtn} onClick={() => setSidebarOpen(true)}>
-            <Menu size={20} />
+          <button className={styles.menuBtn} onClick={() => setSidebarOpen(true)} aria-label="Open navigation" aria-expanded={sidebarOpen}>
+            <Menu size={20} aria-hidden="true" />
           </button>
 
           {/* ── Search ── */}
-          <div className={styles.searchWrap} ref={searchRef}>
-            <Search size={16} className={styles.searchIcon} />
+          <div className={styles.searchWrap} ref={searchRef} role="search">
+            <Search size={16} className={styles.searchIcon} aria-hidden="true" />
             <input
-              type="text"
+              id="admin-search"
+              type="search"
+              aria-label="Search trips, patients, drivers"
               placeholder="Search trips, patients, drivers..."
               className={styles.searchInput}
               value={searchQ}
+              aria-expanded={searchOpen && searchQ.length >= 2}
+              aria-autocomplete="list"
+              aria-controls="search-results"
               onChange={e => { setSearchQ(e.target.value); setSearchOpen(true) }}
               onFocus={() => setSearchOpen(true)}
             />
-            {searchOpen && searchQ.length >= 2 && (
-              <div className={styles.searchDropdown}>
-                {searchResults.length === 0 ? (
-                  <div className={styles.searchEmpty}>No results for "{searchQ}"</div>
-                ) : (
-                  searchResults.map((r, i) => (
-                    <button key={i} className={styles.searchResult} onClick={r.action}>
-                      <span className={styles.searchResultIcon}>{r.icon}</span>
-                      <span className={styles.searchResultBody}>
-                        <span className={styles.searchResultLabel}>{r.label}</span>
-                        <span className={styles.searchResultSub}>{r.sub}</span>
-                      </span>
-                      <span className={styles.searchResultType}>{r.type}</span>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
+            <div
+              id="search-results"
+              role="listbox"
+              aria-label="Search results"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {searchOpen && searchQ.length >= 2 && (
+                <div className={styles.searchDropdown}>
+                  {searchResults.length === 0 ? (
+                    <div className={styles.searchEmpty}>No results for "{searchQ}"</div>
+                  ) : (
+                    searchResults.map((r, i) => (
+                      <button key={i} className={styles.searchResult} onClick={r.action} role="option">
+                        <span className={styles.searchResultIcon} aria-hidden="true">{r.icon}</span>
+                        <span className={styles.searchResultBody}>
+                          <span className={styles.searchResultLabel}>{r.label}</span>
+                          <span className={styles.searchResultSub}>{r.sub}</span>
+                        </span>
+                        <span className={styles.searchResultType}>{r.type}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className={styles.topRight}>
@@ -240,9 +255,12 @@ export default function AdminLayout() {
               <button
                 className={styles.alertBtn}
                 onClick={() => { setNotifOpen(o => !o); setUserOpen(false) }}
+                aria-label={`Notifications${totalAlerts > 0 ? `, ${totalAlerts} alert${totalAlerts > 1 ? 's' : ''}` : ''}`}
+                aria-expanded={notifOpen}
+                aria-haspopup="true"
               >
-                <Bell size={18} />
-                {totalAlerts > 0 && <span className={styles.alertDot} />}
+                <Bell size={18} aria-hidden="true" />
+                {totalAlerts > 0 && <span className={styles.alertDot} aria-hidden="true" />}
               </button>
 
               {notifOpen && (
@@ -284,9 +302,12 @@ export default function AdminLayout() {
               <button
                 className={styles.topUser}
                 onClick={() => { setUserOpen(o => !o); setNotifOpen(false) }}
+                aria-label={`User menu for ${displayName}`}
+                aria-expanded={userOpen}
+                aria-haspopup="true"
               >
-                <div className={styles.topUserAvatar}>{initials}</div>
-                <ChevronDown size={14} className={userOpen ? styles.chevronUp : ''} />
+                <div className={styles.topUserAvatar} aria-hidden="true">{initials}</div>
+                <ChevronDown size={14} className={userOpen ? styles.chevronUp : ''} aria-hidden="true" />
               </button>
 
               {userOpen && (
@@ -324,7 +345,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className={styles.content}>
+        <main id="main-content" className={styles.content}>
           <Outlet />
         </main>
       </div>

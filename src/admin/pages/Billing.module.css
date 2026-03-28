@@ -774,3 +774,8 @@
   .docHeader { flex-direction: column; }
   .docInvoiceInfo { text-align: left; }
 }
+
+@media (max-width: 480px) {
+  .page    { gap: 14px; }
+  .addBtn  { padding: 8px 12px; font-size: 0.82rem; }
+}

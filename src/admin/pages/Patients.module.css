@@ -80,3 +80,9 @@
 .btnSuccess { padding: 9px; background: #d1fae5; border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #16a34a; cursor: pointer; }
 
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+@media (max-width: 480px) {
+  .page    { gap: 14px; }
+  .addBtn  { padding: 8px 12px; font-size: 0.82rem; }
+  .detail  { padding: 16px; }
+}

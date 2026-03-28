@@ -79,6 +79,16 @@ input, select, textarea {
   padding: 0 24px;
 }
 
+/* ── Responsive modal two-column row ─────────────────────────────────────── */
+.modalRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 500px) {
+  .modalRow2 { grid-template-columns: 1fr; }
+}
+
 /* ── Invoice PDF Print Isolation ─────────────────────────────────────────── */
 /* When window.print() fires, ONLY #invoice-print-root is visible.           */
 #invoice-print-root { display: none; }

@@ -145,3 +145,9 @@
 
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .liveSummary { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 540px) { .liveSummary { grid-template-columns: repeat(2, 1fr); } }
+
+@media (max-width: 480px) {
+  .page        { gap: 14px; }
+  .liveSummary { grid-template-columns: 1fr 1fr; }
+  .dateNav     { gap: 6px; }
+}

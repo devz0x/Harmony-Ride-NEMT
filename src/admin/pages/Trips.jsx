@@ -606,5 +606,5 @@ function F({ label, children }) {
   )
 }
 function Row2({ children }) {
-  return <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>{children}</div>
+  return <div className="modalRow2">{children}</div>
 }

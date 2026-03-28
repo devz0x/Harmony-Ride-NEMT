@@ -650,3 +650,11 @@
     padding: 20px 16px;
   }
 }
+
+@media (max-width: 480px) {
+  .topbar      { padding: 0 12px; gap: 6px; }
+  .topRight    { gap: 6px; }
+  .dispatchBtn { display: none; }          /* icon-only dispatch btn clutters; access via sidebar */
+  .searchWrap  { max-width: none; }        /* let search fill all remaining space */
+  .content     { padding: 14px 10px; }
+}

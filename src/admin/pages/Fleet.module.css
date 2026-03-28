@@ -83,3 +83,11 @@
 .btnSuccess { padding: 9px; background: #d1fae5; border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #16a34a; cursor: pointer; }
 
 @media (max-width: 1000px) { .summary { grid-template-columns: repeat(2, 1fr); } .layout { grid-template-columns: 1fr; } }
+
+@media (max-width: 480px) {
+  .page    { gap: 14px; }
+  .summary { grid-template-columns: 1fr 1fr; }
+  .addBtn  { padding: 8px 12px; font-size: 0.82rem; }
+  .detail  { padding: 16px; }
+  .grid    { grid-template-columns: 1fr; }
+}

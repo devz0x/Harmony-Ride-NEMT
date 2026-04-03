@@ -179,6 +179,8 @@ export function useActivityLogs(limit = 200) {
 
 // ─── Mutations ───────────────────────────────────────────────────────────────
 
+console.log('[useData] db module loaded — version 2')
+
 export const db = {
   trips: {
     create: async (data) => {

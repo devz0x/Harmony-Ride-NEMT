@@ -150,40 +150,165 @@ export function useSettings() {
   return { settings, loading, refresh: load }
 }
 
+// ─── Activity Logging ────────────────────────────────────────────────────────
+
+function logActivity(action, entityType, entityId, entityLabel, details) {
+  supabase.from('activity_logs').insert({
+    action,
+    entity_type:  entityType  || null,
+    entity_id:    entityId    || null,
+    entity_label: entityLabel || null,
+    details:      details     || null,
+  }) // fire-and-forget
+}
+
+export function useActivityLogs(limit = 200) {
+  const [logs, setLogs]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const load = useCallback(() => {
+    setLoading(true)
+    supabase.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(limit)
+      .then(({ data }) => { setLogs(data || []); setLoading(false) })
+  }, [limit])
+  useEffect(load, [load])
+  return { logs, loading, refresh: load }
+}
+
 // ─── Mutations ───────────────────────────────────────────────────────────────
 
 export const db = {
   trips: {
-    create: (data) => supabase.from('trips').insert(data),
-    update: (id, data) => supabase.from('trips').update(data).eq('id', id),
-    delete: (id) => supabase.from('trips').delete().eq('id', id),
+    create: async (data) => {
+      const res = await supabase.from('trips').insert(data)
+      if (!res.error) logActivity('Trip Created', 'trip', data.id, data.patient, {
+        date: data.date, time: data.time, pickup: data.pickup,
+        destination: data.destination, transport: data.transport, status: data.status,
+      })
+      return res
+    },
+    update: async (id, data) => {
+      const res = await supabase.from('trips').update(data).eq('id', id)
+      if (!res.error) logActivity('Trip Updated', 'trip', id, data.patient || id, {
+        ...(data.status    && { status: data.status }),
+        ...(data.driver    && { driver: data.driver }),
+        ...(data.vehicle   && { vehicle: data.vehicle }),
+        ...(data.pickup    && { pickup: data.pickup }),
+        ...(data.destination && { destination: data.destination }),
+      })
+      return res
+    },
+    delete: async (id) => {
+      const res = await supabase.from('trips').delete().eq('id', id)
+      if (!res.error) logActivity('Trip Deleted', 'trip', id, id)
+      return res
+    },
   },
   drivers: {
-    create: (data) => supabase.from('drivers').insert(data),
-    update: (id, data) => supabase.from('drivers').update(data).eq('id', id),
-    delete: (id) => supabase.from('drivers').delete().eq('id', id),
+    create: async (data) => {
+      const res = await supabase.from('drivers').insert(data)
+      if (!res.error) logActivity('Driver Added', 'driver', data.id, data.name, {
+        phone: data.phone, status: data.status, vehicle: data.vehicle,
+      })
+      return res
+    },
+    update: async (id, data) => {
+      const res = await supabase.from('drivers').update(data).eq('id', id)
+      if (!res.error) logActivity('Driver Updated', 'driver', id, data.name || id, {
+        ...(data.status  && { status: data.status }),
+        ...(data.vehicle && { vehicle: data.vehicle }),
+        ...(data.rating  && { rating: data.rating }),
+      })
+      return res
+    },
+    delete: async (id) => {
+      const res = await supabase.from('drivers').delete().eq('id', id)
+      if (!res.error) logActivity('Driver Removed', 'driver', id, id)
+      return res
+    },
   },
   patients: {
-    create: (data) => supabase.from('patients').insert(data),
-    update: (id, data) => supabase.from('patients').update(data).eq('id', id),
-    delete: (id) => supabase.from('patients').delete().eq('id', id),
+    create: async (data) => {
+      const res = await supabase.from('patients').insert(data)
+      if (!res.error) logActivity('Patient Added', 'patient', data.id, data.name, {
+        phone: data.phone, insurance: data.insurance, transport: data.transport,
+      })
+      return res
+    },
+    update: async (id, data) => {
+      const res = await supabase.from('patients').update(data).eq('id', id)
+      if (!res.error) logActivity('Patient Updated', 'patient', id, data.name || id, {
+        ...(data.status    && { status: data.status }),
+        ...(data.insurance && { insurance: data.insurance }),
+        ...(data.transport && { transport: data.transport }),
+      })
+      return res
+    },
+    delete: async (id) => {
+      const res = await supabase.from('patients').delete().eq('id', id)
+      if (!res.error) logActivity('Patient Removed', 'patient', id, id)
+      return res
+    },
   },
   vehicles: {
-    create: (data) => supabase.from('vehicles').insert(data),
-    update: (id, data) => supabase.from('vehicles').update(data).eq('id', id),
-    delete: (id) => supabase.from('vehicles').delete().eq('id', id),
+    create: async (data) => {
+      const res = await supabase.from('vehicles').insert(data)
+      const label = [data.year, data.make].filter(Boolean).join(' ') || data.id
+      if (!res.error) logActivity('Vehicle Added', 'vehicle', data.id, label, {
+        type: data.type, plate: data.plate, status: data.status,
+      })
+      return res
+    },
+    update: async (id, data) => {
+      const res = await supabase.from('vehicles').update(data).eq('id', id)
+      const label = [data.year, data.make].filter(Boolean).join(' ') || id
+      if (!res.error) logActivity('Vehicle Updated', 'vehicle', id, label, {
+        ...(data.status      && { status: data.status }),
+        ...(data.mileage     && { mileage: data.mileage }),
+        ...(data.next_service && { next_service: data.next_service }),
+      })
+      return res
+    },
+    delete: async (id) => {
+      const res = await supabase.from('vehicles').delete().eq('id', id)
+      if (!res.error) logActivity('Vehicle Removed', 'vehicle', id, id)
+      return res
+    },
   },
   invoices: {
-    create: (data) => supabase.from('invoices').insert(data),
-    update: (id, data) => supabase.from('invoices').update(data).eq('id', id),
-    delete: (id) => supabase.from('invoices').delete().eq('id', id),
+    create: async (data) => {
+      const res = await supabase.from('invoices').insert(data)
+      if (!res.error) logActivity('Invoice Created', 'invoice', data.id, data.bill_to || data.id, {
+        date: data.invoice_date, status: data.status, terms: data.payment_terms,
+      })
+      return res
+    },
+    update: async (id, data) => {
+      const res = await supabase.from('invoices').update(data).eq('id', id)
+      if (!res.error) logActivity('Invoice Updated', 'invoice', id, data.bill_to || id, {
+        ...(data.status        && { status: data.status }),
+        ...(data.paid_date     && { paid_date: data.paid_date }),
+        ...(data.denial_reason && { denial_reason: data.denial_reason }),
+      })
+      return res
+    },
+    delete: async (id) => {
+      const res = await supabase.from('invoices').delete().eq('id', id)
+      if (!res.error) logActivity('Invoice Deleted', 'invoice', id, id)
+      return res
+    },
   },
   lineItems: {
     createMany: (rows) => supabase.from('invoice_line_items').insert(rows),
     deleteByInvoice: (invoiceId) => supabase.from('invoice_line_items').delete().eq('invoice_id', invoiceId),
   },
   settings: {
-    upsert: (data) => supabase.from('settings').upsert({ ...data, id: 1 }),
+    upsert: async (data) => {
+      const res = await supabase.from('settings').upsert({ ...data, id: 1 })
+      if (!res.error) logActivity('Settings Updated', 'settings', '1', 'System Settings', {
+        company_name: data.company_name,
+      })
+      return res
+    },
   },
 }
 

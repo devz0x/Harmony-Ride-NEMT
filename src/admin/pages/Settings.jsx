@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Save, Bell, Shield, Building, Users, Phone } from 'lucide-react'
-import { useSettings, db } from '../../lib/useData'
+import { Save, Bell, Shield, Building, Users, Phone, ClipboardList, RefreshCw } from 'lucide-react'
+import { useSettings, useActivityLogs, db } from '../../lib/useData'
 import styles from './Settings.module.css'
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
@@ -95,6 +95,7 @@ export default function Settings() {
             { id: 'dispatch',      label: 'Dispatch Rules', icon: Phone },
             { id: 'users',         label: 'Admin Users',    icon: Users },
             { id: 'compliance',    label: 'Compliance',     icon: Shield },
+            { id: 'logs',          label: 'Activity Log',   icon: ClipboardList },
           ].map(t => (
             <button
               key={t.id}
@@ -262,8 +263,134 @@ export default function Settings() {
             </div>
           )}
 
+          {/* ── Activity Log ─────────────────────────────────────── */}
+          {tab === 'logs' && <ActivityLogTab />}
+
         </div>
       </div>
+    </div>
+  )
+}
+
+const ENTITY_META = {
+  trip:     { label: 'Trip',     color: '#1e6fa8', bg: '#dbeeff' },
+  patient:  { label: 'Patient',  color: '#16a34a', bg: '#d1fae5' },
+  driver:   { label: 'Driver',   color: '#7c3aed', bg: '#ede9fe' },
+  vehicle:  { label: 'Vehicle',  color: '#d97706', bg: '#fef3c7' },
+  invoice:  { label: 'Invoice',  color: '#0891b2', bg: '#cffafe' },
+  settings: { label: 'Settings', color: '#64748b', bg: '#f1f5f9' },
+}
+
+const FILTER_TYPES = ['all', 'trip', 'patient', 'driver', 'vehicle', 'invoice', 'settings']
+
+function relTime(ts) {
+  const diff = Date.now() - new Date(ts).getTime()
+  const s = Math.floor(diff / 1000)
+  if (s < 60)   return 'just now'
+  const m = Math.floor(s / 60)
+  if (m < 60)   return `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24)   return `${h}h ago`
+  const d = Math.floor(h / 24)
+  if (d < 30)   return `${d}d ago`
+  return new Date(ts).toLocaleDateString()
+}
+
+function absTime(ts) {
+  return new Date(ts).toLocaleString(undefined, {
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+}
+
+function detailsSummary(details) {
+  if (!details) return null
+  const entries = Object.entries(details).filter(([, v]) => v != null && v !== '')
+  if (!entries.length) return null
+  return entries.map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`).join(' · ')
+}
+
+function ActivityLogTab() {
+  const { logs, loading, refresh } = useActivityLogs(200)
+  const [filter, setFilter] = useState('all')
+  const [search, setSearch] = useState('')
+
+  const visible = logs.filter(l => {
+    const matchType = filter === 'all' || l.entity_type === filter
+    const q = search.toLowerCase()
+    const matchSearch = !q ||
+      l.action?.toLowerCase().includes(q) ||
+      l.entity_label?.toLowerCase().includes(q) ||
+      l.entity_id?.toLowerCase().includes(q)
+    return matchType && matchSearch
+  })
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.logHeader}>
+        <h2 className={styles.sectionTitle} style={{marginBottom:0}}>Activity Log</h2>
+        <button className={styles.refreshBtn} onClick={refresh} title="Refresh">
+          <RefreshCw size={14}/>
+        </button>
+      </div>
+
+      <div className={styles.logControls}>
+        <input
+          className={styles.logSearch}
+          placeholder="Search logs…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <div className={styles.logFilters}>
+          {FILTER_TYPES.map(t => (
+            <button
+              key={t}
+              className={`${styles.logFilter} ${filter === t ? styles.logFilterActive : ''}`}
+              onClick={() => setFilter(t)}
+            >
+              {t === 'all' ? 'All' : (ENTITY_META[t]?.label ?? t)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <div className={styles.logEmpty}>Loading…</div>
+      ) : visible.length === 0 ? (
+        <div className={styles.logEmpty}>No activity found.</div>
+      ) : (
+        <div className={styles.logList}>
+          {visible.map(log => {
+            const meta = ENTITY_META[log.entity_type] || { label: log.entity_type, color: '#64748b', bg: '#f1f5f9' }
+            const summary = detailsSummary(log.details)
+            return (
+              <div key={log.id} className={styles.logEntry}>
+                <div className={styles.logDot} style={{ background: meta.color }} />
+                <div className={styles.logBody}>
+                  <div className={styles.logTop}>
+                    <span className={styles.logBadge} style={{ color: meta.color, background: meta.bg }}>
+                      {meta.label}
+                    </span>
+                    <span className={styles.logAction}>{log.action}</span>
+                    {log.entity_id && log.entity_label && log.entity_label !== log.entity_id && (
+                      <span className={styles.logEntityLabel}>{log.entity_label}</span>
+                    )}
+                    {log.entity_id && (
+                      <span className={styles.logEntityId}>{log.entity_id}</span>
+                    )}
+                  </div>
+                  {summary && <p className={styles.logDetails}>{summary}</p>}
+                </div>
+                <div className={styles.logTime} title={absTime(log.created_at)}>
+                  {relTime(log.created_at)}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      <p className={styles.logCount}>{visible.length} of {logs.length} entries</p>
     </div>
   )
 }

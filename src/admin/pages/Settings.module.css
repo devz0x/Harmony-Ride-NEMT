@@ -78,4 +78,33 @@
 .compActive { background: #d1fae5; color: #16a34a; }
 .compExpiring { background: #fef3c7; color: #d97706; }
 
+/* Activity Log */
+.logHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9; }
+.refreshBtn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1.5px solid #e2e8f0; border-radius: 7px; background: #f8fafc; color: #64748b; cursor: pointer; transition: all 0.2s; }
+.refreshBtn:hover { background: #1e6fa8; color: white; border-color: #1e6fa8; }
+
+.logControls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.logSearch { padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; color: #334155; background: #f8fafc; outline: none; font-family: inherit; transition: all 0.2s; }
+.logSearch:focus { border-color: #1e6fa8; background: white; box-shadow: 0 0 0 3px rgba(30,111,168,0.08); }
+.logFilters { display: flex; flex-wrap: wrap; gap: 6px; }
+.logFilter { padding: 4px 12px; border: 1.5px solid #e2e8f0; border-radius: 100px; background: #f8fafc; font-size: 0.75rem; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.15s; }
+.logFilter:hover { border-color: #1e6fa8; color: #1e6fa8; }
+.logFilterActive { background: #1e6fa8; color: white; border-color: #1e6fa8; }
+
+.logList { display: flex; flex-direction: column; gap: 0; max-height: 520px; overflow-y: auto; border: 1.5px solid #e2e8f0; border-radius: 10px; }
+.logEntry { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #f8fafc; transition: background 0.15s; }
+.logEntry:last-child { border-bottom: none; }
+.logEntry:hover { background: #f8fafc; }
+.logDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.logBody { flex: 1; min-width: 0; }
+.logTop { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.logBadge { font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 100px; white-space: nowrap; }
+.logAction { font-size: 0.85rem; font-weight: 600; color: #0f172a; }
+.logEntityLabel { font-size: 0.82rem; color: #334155; }
+.logEntityId { font-size: 0.75rem; color: #94a3b8; font-family: monospace; background: #f1f5f9; padding: 1px 6px; border-radius: 4px; }
+.logDetails { font-size: 0.73rem; color: #94a3b8; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.logTime { font-size: 0.73rem; color: #94a3b8; white-space: nowrap; flex-shrink: 0; padding-top: 3px; }
+.logEmpty { padding: 40px; text-align: center; color: #94a3b8; font-size: 0.875rem; }
+.logCount { font-size: 0.72rem; color: #94a3b8; text-align: right; margin-top: 8px; }
+
 @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .tabs { flex-direction: row; overflow-x: auto; } .grid { grid-template-columns: 1fr; } }

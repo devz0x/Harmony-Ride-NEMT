@@ -143,6 +143,16 @@ create table if not exists settings (
   constraint settings_singleton check (id = 1)
 );
 
+create table if not exists activity_logs (
+  id           bigint generated always as identity primary key,
+  created_at   timestamptz default now(),
+  action       text not null,
+  entity_type  text,
+  entity_id    text,
+  entity_label text,
+  details      jsonb
+);
+
 -- ── Disable RLS (anon key access for admin panel) ─────────────
 
 alter table drivers            disable row level security;
@@ -152,6 +162,7 @@ alter table trips              disable row level security;
 alter table invoices           disable row level security;
 alter table invoice_line_items disable row level security;
 alter table settings           disable row level security;
+alter table activity_logs      disable row level security;
 
 -- ── Settings singleton row (required for Settings tab) ────────
 -- Only inserts if the row doesn't already exist.

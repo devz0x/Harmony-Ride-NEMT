@@ -159,7 +159,10 @@ function logActivity(action, entityType, entityId, entityLabel, details) {
     entity_id:    entityId    || null,
     entity_label: entityLabel || null,
     details:      details     || null,
-  }) // fire-and-forget
+  }).then(({ error }) => {
+    if (error) console.error('[log]', action, error.code, error.message)
+    else console.log('[log] OK:', action)
+  })
 }
 
 export function useActivityLogs(limit = 200) {

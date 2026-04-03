@@ -170,7 +170,13 @@ export function useActivityLogs(limit = 200) {
     supabase.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(limit)
       .then(({ data }) => { setLogs(data || []); setLoading(false) })
   }, [limit])
-  useEffect(load, [load])
+  useEffect(() => {
+    load()
+    const channel = supabase.channel('activity_logs_changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_logs' }, load)
+      .subscribe()
+    return () => supabase.removeChannel(channel)
+  }, [load])
   return { logs, loading, refresh: load }
 }
 

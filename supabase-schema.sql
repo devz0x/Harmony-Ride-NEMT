@@ -164,6 +164,11 @@ alter table invoice_line_items disable row level security;
 alter table settings           disable row level security;
 alter table activity_logs      disable row level security;
 
+-- ── Grants for anon/authenticated (required for app inserts via anon key) ─────
+
+grant insert, select on activity_logs to anon, authenticated;
+grant usage, select on sequence activity_logs_id_seq to anon, authenticated;
+
 -- ── Settings singleton row (required for Settings tab) ────────
 -- Only inserts if the row doesn't already exist.
 

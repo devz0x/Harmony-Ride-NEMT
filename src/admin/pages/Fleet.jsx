@@ -2,10 +2,18 @@ import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Truck, AlertTriangle, CheckCircle, Wrench, Plus, X, Search, Trash2 } from 'lucide-react'
 import { useVehicles, useDrivers, db } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import styles from './Fleet.module.css'
 
 const STATUS_OPTS = ['all', 'available', 'in-use', 'maintenance', 'reserved']
 const TYPES = ['Wheelchair Van', 'Stretcher Van', 'Sedan', 'SUV', 'Minivan']
+
+const VEHICLE_FEATURES = [
+  'Hydraulic Lift', 'Ramp', 'ADA Compliant', 'GPS Tracking', 'Air Conditioning',
+  'Wheelchair Tie-downs', 'Stretcher Mount', 'Oxygen Holder', 'First Aid Kit',
+  'Backup Camera', 'Side Entry', 'Rear Entry', 'Power Door', 'Grab Rails',
+  'Non-slip Flooring', 'Bariatric Capacity', 'Privacy Partition', 'Fire Extinguisher',
+]
 
 const statusColor = { available: '#16a34a', 'in-use': '#1e6fa8', maintenance: '#ef4444', reserved: '#d97706' }
 const statusBg    = { available: '#d1fae5', 'in-use': '#dbeeff',  maintenance: '#fee2e2', reserved: '#fef3c7' }
@@ -297,6 +305,7 @@ export default function Fleet() {
           vehicle={modal === 'create' ? EMPTY : modal}
           isNew={modal === 'create'}
           drivers={drivers}
+          vehicles={vehicles}
           saving={saving}
           error={error}
           onSave={saveVehicle}
@@ -317,9 +326,15 @@ function Row({ label, value, warn }) {
   )
 }
 
-function VehicleModal({ vehicle, isNew, drivers, saving, error, onSave, onClose }) {
+function VehicleModal({ vehicle, isNew, drivers, vehicles = [], saving, error, onSave, onClose }) {
   const [form, setForm] = useState({ ...vehicle })
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const makeSuggestions = [...new Set(vehicles.map(v => v.make).filter(Boolean))]
+  const featureSuggestions = [...new Set([
+    ...VEHICLE_FEATURES,
+    ...vehicles.flatMap(v => v.features || []),
+  ])]
 
   return (
     <div style={overlay} onClick={e => e.target === e.currentTarget && onClose()}>
@@ -348,7 +363,7 @@ function VehicleModal({ vehicle, isNew, drivers, saving, error, onSave, onClose 
 
           <Row2>
             <F label="Make / Model *">
-              <input style={inp} required value={form.make || ''} onChange={e => set('make', e.target.value)}/>
+              <Typeahead style={inp} required value={form.make || ''} onChange={v => set('make', v)} suggestions={makeSuggestions} placeholder="Toyota Sienna"/>
             </F>
             <F label="Year">
               <input style={inp} type="number" value={form.year || ''} onChange={e => set('year', e.target.value)}/>
@@ -404,7 +419,7 @@ function VehicleModal({ vehicle, isNew, drivers, saving, error, onSave, onClose 
           </F>
 
           <F label="Features (comma-separated)">
-            <input style={inp} value={form.features || ''} onChange={e => set('features', e.target.value)} placeholder="Hydraulic Lift, ADA, GPS…"/>
+            <Typeahead style={inp} value={form.features || ''} onChange={v => set('features', v)} suggestions={featureSuggestions} tokenize placeholder="Hydraulic Lift, ADA, GPS…"/>
           </F>
 
           {error && <p style={{ fontSize: '13px', color: '#ef4444', margin: 0 }}>{error}</p>}

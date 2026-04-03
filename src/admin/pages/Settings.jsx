@@ -1,9 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Save, Bell, Shield, Building, Users, Phone, ClipboardList, RefreshCw } from 'lucide-react'
 import { useSettings, useActivityLogs, db } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import styles from './Settings.module.css'
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+
+const US_STATES = [
+  'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+  'Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+  'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan',
+  'Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire',
+  'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio',
+  'Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+  'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia',
+  'Wisconsin','Wyoming',
+]
 
 const NOTIF_ITEMS = [
   { key: 'new_trip',           label: 'New trip booking created',          sub: 'Alert dispatchers when a new trip is booked' },
@@ -116,7 +128,7 @@ export default function Settings() {
               <h2 className={styles.sectionTitle}>Company Information</h2>
               <div className={styles.grid}>
                 <Field label="Company Name"       value={form.company_name}     onChange={v=>set('company_name',v)}/>
-                <Field label="Operating States"   value={form.operating_states} onChange={v=>set('operating_states',v)}/>
+                <Field label="Operating States"   value={form.operating_states} onChange={v=>set('operating_states',v)} suggestions={US_STATES} tokenize/>
                 <Field label="Primary Phone"      value={form.primary_phone}    onChange={v=>set('primary_phone',v)}/>
                 <Field label="Dispatch Phone"     value={form.dispatch_phone}   onChange={v=>set('dispatch_phone',v)}/>
                 <Field label="Support Email"      value={form.support_email}    onChange={v=>set('support_email',v)}/>
@@ -395,16 +407,26 @@ function ActivityLogTab() {
   )
 }
 
-function Field({ label, value, onChange, type = 'text' }) {
+function Field({ label, value, onChange, type = 'text', suggestions, tokenize }) {
   return (
     <div className={styles.field}>
       <label className={styles.fieldLabel}>{label}</label>
-      <input
-        className={styles.fieldInput}
-        type={type}
-        value={value ?? ''}
-        onChange={e => onChange(e.target.value)}
-      />
+      {suggestions ? (
+        <Typeahead
+          className={styles.fieldInput}
+          value={value ?? ''}
+          onChange={onChange}
+          suggestions={suggestions}
+          tokenize={tokenize}
+        />
+      ) : (
+        <input
+          className={styles.fieldInput}
+          type={type}
+          value={value ?? ''}
+          onChange={e => onChange(e.target.value)}
+        />
+      )}
     </div>
   )
 }

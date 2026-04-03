@@ -7,6 +7,7 @@ import {
   AlertCircle, Info,
 } from 'lucide-react'
 import { useInvoices, useTrips, db, nextId } from '../../lib/useData'
+import Typeahead from '../../components/Typeahead'
 import {
   calculateTripCost, tripToLineItem, getTimeCategory,
   getServiceName, rateLabel, RATES,
@@ -19,6 +20,13 @@ const statusLabel = { paid:'Paid',    submitted:'Submitted', pending:'Pending', 
 
 function fmt(n) { return `$${Number(n).toFixed(2)}` }
 const EMPTY_LINE = { service:'', description:'', qty:1, rate:0, amount:0 }
+
+const LINE_SERVICES = [
+  'Wheelchair Transportation', 'Ambulatory Transportation', 'Stretcher Transportation',
+  'Bariatric Transportation', 'After-Hours Wheelchair Transportation',
+  'After-Hours Ambulatory Transportation', 'After-Hours Stretcher Transportation',
+  'Rush Fee', 'Wait Time', 'Attendant Fee', 'Late Cancellation Fee',
+]
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
@@ -246,6 +254,9 @@ function GenerateModal({ invoices, onClose, refresh }) {
   const today  = new Date().toISOString().slice(0,10)
   const from30 = new Date(Date.now() - 30*86400000).toISOString().slice(0,10)
 
+  const billToSuggestions  = [...new Set(invoices.map(i => i.billTo).filter(Boolean))]
+  const patientSuggestions = [...new Set(trips.map(t => t.patient).filter(Boolean))]
+
   const [billTo,      setBillTo]      = useState('')
   const [billAddr,    setBillAddr]    = useState('')
   const [dateFrom,    setDateFrom]    = useState(from30)
@@ -335,7 +346,7 @@ function GenerateModal({ invoices, onClose, refresh }) {
           {/* Header fields */}
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
             <F label="Bill To *">
-              <input style={inp} required value={billTo} onChange={e=>setBillTo(e.target.value)} placeholder="Mary Immaculate Health Care Services"/>
+              <Typeahead style={inp} required value={billTo} onChange={setBillTo} suggestions={billToSuggestions} placeholder="Mary Immaculate Health Care Services"/>
             </F>
             <F label="Date Range">
               <div style={{display:'flex',gap:'6px',alignItems:'center'}}>
@@ -350,7 +361,7 @@ function GenerateModal({ invoices, onClose, refresh }) {
           </F>
           <div style={{display:'flex',gap:'10px',alignItems:'flex-end'}}>
             <F label="Filter by Patient" style={{flex:1}}>
-              <input style={inp} value={filterPat} onChange={e=>setFilterPat(e.target.value)} placeholder="Leave blank for all patients"/>
+              <Typeahead style={inp} value={filterPat} onChange={setFilterPat} suggestions={patientSuggestions} placeholder="Leave blank for all patients"/>
             </F>
             <button style={{...btnPri,padding:'10px 20px',whiteSpace:'nowrap',flexShrink:0}} onClick={loadTrips} disabled={tripsLoading}>
               {tripsLoading ? 'Loading…' : 'Load Trips'}
@@ -452,6 +463,15 @@ function InvoiceModal({ invoices, invoice, onClose, refresh }) {
   const today = new Date().toISOString().slice(0,10)
   const due15 = new Date(Date.now()+15*86400000).toISOString().slice(0,10)
 
+  const billToSuggestions  = [...new Set(invoices.map(i => i.billTo).filter(Boolean))]
+  const serviceSuggestions = [...new Set([
+    ...LINE_SERVICES,
+    ...invoices.flatMap(inv => (inv.lineItems || []).map(l => l.service)).filter(Boolean),
+  ])]
+  const descSuggestions = [...new Set(
+    invoices.flatMap(inv => (inv.lineItems || []).map(l => l.description)).filter(Boolean)
+  )]
+
   const [header, setHeader] = useState(() => isNew
     ? { bill_to:'', bill_to_address:'', invoice_date:today, due_date:due15, payment_terms:'Net 15', status:'pending' }
     : { bill_to:invoice.billTo, bill_to_address:invoice.billToAddress||'', invoice_date:invoice.invoiceDate, due_date:invoice.dueDate, payment_terms:invoice.paymentTerms||'Net 15', status:invoice.status }
@@ -505,7 +525,7 @@ function InvoiceModal({ invoices, invoice, onClose, refresh }) {
         <form style={mBody} onSubmit={handleSubmit}>
           <Row2>
             <F label="Bill To *">
-              <input style={inp} required value={header.bill_to} onChange={e=>setH('bill_to',e.target.value)} placeholder="Healthcare org or facility"/>
+              <Typeahead style={inp} required value={header.bill_to} onChange={v=>setH('bill_to',v)} suggestions={billToSuggestions} placeholder="Healthcare org or facility"/>
             </F>
             <F label="Status">
               <select style={inp} value={header.status} onChange={e=>setH('status',e.target.value)}>
@@ -536,8 +556,8 @@ function InvoiceModal({ invoices, invoice, onClose, refresh }) {
             </div>
             {lines.map((line,i) => (
               <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 3fr 52px 76px 76px 28px',gap:'6px',marginBottom:'6px',alignItems:'center'}}>
-                <input style={{...inp,fontSize:'13px'}} value={line.service}     onChange={e=>setLine(i,'service',e.target.value)}     placeholder="Wheelchair Transportation"/>
-                <input style={{...inp,fontSize:'13px'}} value={line.description} onChange={e=>setLine(i,'description',e.target.value)} placeholder="Service for PATIENT on MM/DD"/>
+                <Typeahead style={{...inp,fontSize:'13px'}} value={line.service}     onChange={v=>setLine(i,'service',v)}     suggestions={serviceSuggestions} placeholder="Wheelchair Transportation"/>
+                <Typeahead style={{...inp,fontSize:'13px'}} value={line.description} onChange={v=>setLine(i,'description',v)} suggestions={descSuggestions}    placeholder="Service for PATIENT on MM/DD"/>
                 <input style={{...inp,fontSize:'13px'}} type="number" min="0" step="0.5" value={line.qty} onChange={e=>setLine(i,'qty',e.target.value)}/>
                 <input style={{...inp,fontSize:'13px'}} type="number" min="0" step="0.01" value={line.rate} onChange={e=>setLine(i,'rate',e.target.value)}/>
                 <input style={{...inp,fontSize:'13px',background:'#f8fafc'}} readOnly value={parseFloat(line.amount||0).toFixed(2)}/>
